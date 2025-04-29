@@ -1,0 +1,43 @@
+---
+- name: Je crée un fichier TXT
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Je crée un fichier TXT
+      copy:
+        content: "Je suis un fichier texte N°{{ item }}"
+        dest: /tmp/fichier{{ item }}.txt
+        mode: '0644'
+      loop: [1, 2, 3]
+      register: result
+      notify: "Je change le mode du fichier {{ item }}"
+
+    - name: J'affiche le résultat de la tâche
+      debug:
+        msg: "{{ result }}"
+
+  handlers:
+    - name: Je change le mode du fichier 1
+      file:
+        mode: '0777'
+        path: /tmp/fichier1.txt
+      register: chmod_result
+      notify: "J'affiche le résultat du chmod"
+    - name: Je change le mode du fichier 2
+      file:
+        mode: '0666'
+        path: /tmp/fichier2.txt
+      register: chmod_result
+      notify: "J'affiche le résultat du chmod"
+    - name: Je change le mode du fichier 3
+      file:
+        mode: '0444'
+        path: /tmp/fichier3.txt
+      register: chmod_result
+      notify: "J'affiche le résultat du chmod"
+    
+    - name: J'affiche le résultat du chmod
+      debug:
+        msg: "{{ chmod_result }}"
+      when: chmod_result is changed

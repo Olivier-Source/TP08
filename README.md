@@ -1,2 +1,3 @@
-# TP08
-Pour formation Ansible
+# Ansible Collection - olivier.tp
+
+Documentation for the collection.
